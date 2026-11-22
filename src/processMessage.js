@@ -111,8 +111,10 @@ export async function processMessage(message, {
             }
 
             // Tambah tugas baru: /tambah <No WA> - <Nama Tugas> - <Deadline> - [Jam] - <Harga> - [DP] - [PIC]
+            // Mendukung pemisah strip (-) maupun garis tegak (|)
             if (command === "/tambah") {
-                const parts = args.split(/\s+-\s+/).map((p) => p.trim());
+                const delimiter = args.includes("|") ? /\s*\|\s*/ : /\s+-\s+/;
+                const parts = args.split(delimiter).map((p) => p.trim());
                 if (parts.length < 4) {
                     await sendReply(
                         message,

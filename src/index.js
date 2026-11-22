@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import http from "node:http";
 import { createAiAssistant } from "./aiAssistant.js";
 import { loadConfig } from "./config.js";
 import { createTaskRepository } from "./googleSheetsRepository.js";
@@ -15,6 +16,16 @@ if (fs.existsSync(".env") && typeof process.loadEnvFile === "function") {
 // Titik awal aplikasi bot WhatsApp Joki Tugas
 async function main() {
     const config = loadConfig();
+
+    // Web server dummy untuk health check platform cloud (seperti Render / Koyeb)
+    const port = process.env.PORT || 3000;
+    http.createServer((req, res) => {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end("WhatsApp Bot is running!");
+    }).listen(port, () => {
+        logger.info(`Web server aktif di port ${port}`);
+    });
+
     const taskRepository = createTaskRepository(config);
     const aiAssistant = config.geminiApiKey ? createAiAssistant({ apiKey: config.geminiApiKey, model: config.geminiModel, taskRepository }) : null;
 
