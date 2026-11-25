@@ -22,7 +22,7 @@ async function main() {
     http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("WhatsApp Bot is running!");
-    }).listen(port, () => {
+    }).listen(port, "0.0.0.0", () => {
         logger.info(`Web server aktif di port ${port}`);
     });
 
